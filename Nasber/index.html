@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pembuat Naskah Berita TV</title>
+    <!-- Load Tailwind CSS --><script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0F172A; /* Dark Blue - Slate 900 */
+            color: #E2E8F0; /* Light text color */
+        }
+        /* Custom style to mimic script presentation - NOW TWO-COLUMN FRIENDLY */
+        #outputScript {
+            white-space: pre-wrap;
+            font-size: 0.95rem;
+            line-height: 1.8; /* Slightly wider line height for better column readability */
+            background-color: #1E293B; 
+            color: #F8FAFC; 
+            border-left: 5px solid #FACC15; 
+            border-radius: 0.5rem; 
+        }
+        /* Style for required input */
+        input:required:invalid, textarea:required:invalid {
+            border-color: #F87171; /* Red for invalid input */
+        }
+        /* Custom gradient button */
+        .btn-gradient {
+            background: linear-gradient(to right, #FACC15, #F59E0B); 
+            color: #1E293B; 
+            font-weight: 600;
+            transition: all 0.2s ease-in-out;
+        }
+        .btn-gradient:hover {
+            background: linear-gradient(to right, #FACC15, #D97706); 
+            box-shadow: 0 4px 10px rgba(252, 186, 21, 0.4); 
+        }
+        .header-bg {
+            background: linear-gradient(to right, #1E3A8A, #172554); 
+            color: #FACC15; 
+        }
+        .card-bg {
+            background-color: #1E293B; 
+            color: #E2E8F0;
+        }
+        .border-highlight {
+            border-color: #FACC15; 
+        }
+        .focus-ring-yellow:focus {
+            outline: none;
+            border-color: #FACC15;
+            box-shadow: 0 0 0 2px rgba(252, 186, 21, 0.5);
+        }
+        .text-highlight {
+            color: #FACC15; 
+        }
+        /* Style for caption output */
+        .caption-output {
+            background-color: #0F172A; 
+            border: 1px solid #334155;
+            color: #E2E8F0;
+        }
+        /* Footer style */
+        .footer-bg {
+            background-color: #1E293B;
+            border-top: 1px solid #334155;
+            color: #94A3B8; 
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-4xl mx-auto">
+        <header class="text-center mb-8 p-6 rounded-xl shadow-lg header-bg">
+            <!-- Diperbarui: H1 kini hanya menampilkan branding utama -->
+            <h1 class="text-3xl font-bold text-highlight">TAPIN TV</h1>
+            <!-- Diperbarui: P kini menampilkan deskripsi alat yang sebelumnya ada di H1 -->
+            <p class="text-gray-300 mt-2">Pembuat Naskah Berita TV (ROLPACKAGE)</p>
+            <div id="currentDateTime" class="mt-3 text-sm font-medium text-yellow-300"></div>
+        </header>
+
+        <!-- Input Form --><div class="card-bg p-6 md:p-8 rounded-xl shadow-lg mb-8">
+            <h2 class="text-xl font-semibold text-highlight mb-4 border-b border-gray-700 pb-2">1. Input Data Berita & Produksi</h2>
+            
+            <div class="space-y-4">
+                
+                <!-- NEW PROFESSIONAL FIELDS -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label for="scriptNumber" class="block text-sm font-medium text-gray-300">No. Naskah (Opsional)</label>
+                        <input type="text" id="scriptNumber" class="mt-1 block w-full rounded-lg bg-gray-700 border-gray-600 text-white shadow-sm p-3 focus-ring-yellow border-2" placeholder="Contoh: B01 / 2024">
+                    </div>
+                    <div>
+                        <label for="duration" class="block text-sm font-medium text-gray-300">Durasi Tayang (Detik)</label>
+                        <input type="number" id="duration" class="mt-1 block w-full rounded-lg bg-gray-700 border-gray-600 text-white shadow-sm p-3 focus-ring-yellow border-2" placeholder="Contoh: 60" value="60">
+                    </div>
+                    <div>
+                        <label for="cameraman" class="block text-sm font-medium text-gray-300">Nama Juru Kamera</label>
+                        <input type="text" id="cameraman" class="mt-1 block w-full rounded-lg bg-gray-700 border-gray-600 text-white shadow-sm p-3 focus-ring-yellow border-2" placeholder="Contoh: JONED">
+                    </div>
+                </div>
+                <!-- END NEW FIELDS -->
+
+                <div>
+                    <label for="inputTitle" class="block text-sm font-medium text-gray-300">Judul Berita (Maks 10 Kata)</label>
+                    <input type="text" id="inputTitle" required class="mt-1 block w-full rounded-lg bg-gray-700 border-gray-600 text-white shadow-sm p-3 focus-ring-yellow border-2" placeholder="Contoh: Tim Gulat Tapin Terus Tambahkan Medali">
+                </div>
+
+                <div>
+                    <label for="rawContent" class="block text-sm font-medium text-gray-300">Isi Utama Berita (Fakta-fakta, kronologi, kutipan, dan detail)</label>
+                    <textarea id="rawContent" required rows="8" class="mt-1 block w-full rounded-lg bg-gray-700 border-gray-600 text-white shadow-sm p-3 focus-ring-yellow border-2" placeholder="Masukkan semua detail fakta di sini. Paragraf pertama akan otomatis diolah menjadi LEAD. Pastikan fakta dipisahkan dengan titik. Contoh: HARI KETIGA TANDING. TIM GULAT TAPIN KEMBALI TOREHKAN PRESTASINYA DI AJANG PEKAN OLAHRAGA PROVINSI KALIMANTAN SELATAN. KALI INI 2 ATLETNYA RAIH 1 MEDALI EMAS DAN 1 PERAK..."></textarea>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="reporter" class="block text-sm font-medium text-gray-300">Nama Reporter</label>
+                        <input type="text" id="reporter" class="mt-1 block w-full rounded-lg bg-gray-700 border-gray-600 text-white shadow-sm p-3 focus-ring-yellow border-2" placeholder="Contoh: MANG GIGIT">
+                    </div>
+                    <div>
+                        <label for="closingLocation" class="block text-sm font-medium text-gray-300">Lokasi Peliputan (Closing)</label>
+                        <input type="text" id="closingLocation" class="mt-1 block w-full rounded-lg bg-gray-700 border-gray-600 text-white shadow-sm p-3 focus-ring-yellow border-2" placeholder="Contoh: DARI TANAH LAUT">
+                    </div>
+                </div>
+
+                <button onclick="generateScript()" class="w-full mt-6 py-3 px-4 rounded-lg shadow-md btn-gradient focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-400 transition duration-150 ease-in-out font-semibold">
+                    GENERATE NASKAH TV
+                </button>
+            </div>
+        </div>
+        
+        <!-- Output Script Area --><div id="outputContainer" class="hidden card-bg p-6 md:p-8 rounded-xl shadow-lg">
+            <div class="flex justify-between items-center mb-4 border-b border-gray-700 pb-2">
+                <h2 class="text-xl font-semibold text-highlight">2. Naskah Siaran (Output)</h2>
+                <button onclick="copyText('outputScript')" class="flex items-center text-sm text-gray-400 hover:text-yellow-400 transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-1">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v2.25H21V7.5h-4.5V4.5H12V7.5h4.5V17.25zM12 4.5V7.5M8.25 12V4.5M3.75 7.5V19.5h10.5M10.5 12V7.5" />
+                    </svg>
+                    Salin Naskah
+                </button>
+            </div>
+            
+            <!-- Output script now uses monospace/pre tag for column alignment -->
+            <pre id="outputScript" class="p-4 rounded-lg text-gray-800 overflow-x-auto"></pre>
+        </div>
+
+        <!-- Social Media Output Area -->
+        <div id="socialMediaOutputContainer" class="hidden card-bg p-6 md:p-8 rounded-xl shadow-lg mt-8">
+            <h2 class="text-xl font-semibold text-highlight mb-4 border-b border-gray-700 pb-2">3. Caption Media Sosial</h2>
+            
+            <!-- Instagram Caption -->
+            <div class="mb-6">
+                <div class="flex justify-between items-center mb-2">
+                    <h3 class="font-semibold text-gray-300">A. Instagram/Post Singkat</h3>
+                    <button onclick="copyText('igCaptionOutput')" class="flex items-center text-sm text-gray-400 hover:text-yellow-400 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-1">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v2.25H21V7.5h-4.5V4.5H12V7.5h4.5V17.25zM12 4.5V7.5M8.25 12V4.5M3.75 7.5V19.5h10.5M10.5 12V7.5" />
+                        </svg>
+                        Salin Teks
+                    </button>
+                </div>
+                <pre id="igCaptionOutput" class="p-3 rounded-lg caption-output overflow-x-auto text-sm"></pre>
+            </div>
+
+            <!-- YouTube Caption (Description) -->
+            <div>
+                <div class="flex justify-between items-center mb-2">
+                    <h3 class="font-semibold text-gray-300">B. YouTube Description/Long Caption</h3>
+                    <button onclick="copyText('ytDescriptionOutput')" class="flex items-center text-sm text-gray-400 hover:text-yellow-400 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-1">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v2.25H21V7.5h-4.5V4.5H12V7.5h4.5V17.25zM12 4.5V7.5M8.25 12V4.5M3.75 7.5V19.5h10.5M10.5 12V7.5" />
+                        </svg>
+                        Salin Teks
+                    </button>
+                </div>
+                <pre id="ytDescriptionOutput" class="p-3 rounded-lg caption-output overflow-x-auto text-sm"></pre>
+            </div>
+
+            <!-- Hashtags -->
+            <div class="mt-6 border-t border-gray-700 pt-4">
+                <div class="flex justify-between items-center mb-2">
+                    <h3 class="font-semibold text-highlight">#Hashtags</h3>
+                    <button onclick="copyText('hashtagOutput')" class="flex items-center text-sm text-gray-400 hover:text-yellow-400 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-1">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v2.25H21V7.5h-4.5V4.5H12V7.5h4.5V17.25zM12 4.5V7.5M8.25 12V4.5M3.75 7.5V19.5h10.5M10.5 12V7.5" />
+                        </svg>
+                        Salin Hashtag
+                    </button>
+                </div>
+                <pre id="hashtagOutput" class="p-3 rounded-lg caption-output overflow-x-auto text-yellow-400 text-sm"></pre>
+            </div>
+        </div>
+
+        <!-- Notification Bar --><div id="notification" class="hidden fixed bottom-4 right-4 bg-yellow-500 text-blue-900 px-4 py-2 rounded-lg shadow-xl transition-opacity duration-300">
+            Naskah berhasil disalin!
+        </div>
+
+        <!-- Custom Alert Modal --><div id="customAlert" class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 z-50">
+            <div class="bg-gray-800 p-6 rounded-lg shadow-xl max-w-sm w-full border-t-4 border-yellow-500">
+                <h3 class="text-lg font-bold mb-3 text-yellow-500">Perhatian</h3>
+                <p class="text-gray-200 mb-4" id="customAlertMessage"></p>
+                <button onclick="document.getElementById('customAlert').classList.add('hidden')" class="w-full py-2 bg-yellow-500 text-gray-900 font-semibold rounded-lg hover:bg-yellow-600 transition">OK</button>
+            </div>
+        </div>
+
+    </div>
+    
+    <footer class="mt-12 p-4 text-center footer-bg rounded-t-xl max-w-4xl mx-auto shadow-inner">
+        <p class="text-xs">&copy; 2024 Aplikasi Pembuat Naskah Berita TV, oleh Mang Gigit Sayang Tapin TV.</p>
+        <p class="text-xs mt-1">Dirancang untuk efisiensi produksi berita.</p>
+    </footer>
+
+    <script>
+        // Global utility function to get the current date/time string for the script header
+        function getScriptHeaderDateTime() {
+            const now = new Date();
+            const locale = 'id-ID';
+            const formattedDate = now.toLocaleDateString(locale, { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+            const formattedTime = now.toLocaleTimeString(locale, { 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                hour12: false
+            });
+            return `${formattedDate}, ${formattedTime} WIB`;
+        }
+
+        // Fungsi utilitas untuk membersihkan dan mengubah teks menjadi huruf kapital
+        function formatToScript(text) {
+            if (!text) return '';
+            // Ganti semua baris baru menjadi spasi tunggal dan buat huruf kapital
+            let cleanText = text.replace(/\n\s*\n/g, ' ').replace(/\n/g, ' ').toUpperCase().trim();
+            // Ganti tanda baca yang umum di naskah TV
+            cleanText = cleanText.replace(/,/g, ' /').replace(/\./g, ' //');
+            return cleanText;
+        }
+
+        function generateScript() {
+            // New Professional Inputs
+            const scriptNumber = document.getElementById('scriptNumber').value || '-';
+            const duration = document.getElementById('duration').value || '60';
+            const cameraman = document.getElementById('cameraman').value || 'OPERATOR';
+            
+            // Existing Inputs
+            const inputTitle = document.getElementById('inputTitle').value;
+            const rawContent = document.getElementById('rawContent').value;
+            const reporter = document.getElementById('reporter').value || 'REPORTER';
+            const closingLocation = document.getElementById('closingLocation').value || 'LOKASI';
+
+            const outputScript = document.getElementById('outputScript');
+            const outputContainer = document.getElementById('outputContainer');
+            const socialMediaContainer = document.getElementById('socialMediaOutputContainer');
+
+            // Validasi input
+            if (!inputTitle || !rawContent) {
+                alertUser("Semua kolom bertanda *wajib diisi.");
+                return;
+            }
+
+            // 1. Format Judul dan Konten
+            const formattedTitle = inputTitle.toUpperCase();
+            
+            let sentences = rawContent.split(/[\.!\?]/).filter(s => s.trim().length > 0);
+            
+            let leadText = '';
+            let rolpackageText = '';
+
+            if (sentences.length >= 2) {
+                leadText = sentences.slice(0, 2).join('. ') + '.';
+                rolpackageText = sentences.slice(2).join('. ') + '.';
+            } else if (sentences.length === 1) {
+                leadText = sentences[0] + '.';
+            }
+            
+            const formattedLead = formatToScript(leadText);
+            const formattedRolpackage = formatToScript(rolpackageText).replace(/\/\s+\/\//g, '//'); 
+
+            // Helper for two-column output padding (simulating a tab)
+            const TAB = '    '; 
+            const LINE = '-'.repeat(80);
+
+            // 2. Gabungkan menjadi Naskah Akhir dengan format Dua Kolom
+            const finalScript = `
+NOMOR NASKAH: ${scriptNumber}
+JUDUL \t\t: ${formattedTitle}
+DURASI TAYANG: ${duration} DETIK
+TANGGAL/WAKTU: ${getScriptHeaderDateTime()}
+LOKASI LIPUTAN: ${formatToScript(closingLocation)}
+REPORTER \t: ${formatToScript(reporter)}
+JURU KAMERA \t: ${cameraman.toUpperCase()}
+
+${LINE}
+VISUAL${TAB}${TAB}| AUDIO (NARASI/SOT)
+${LINE}
+>> LEAD IN (OPENING)
+V: CUE OPENING GRAFIS${TAB}| A: [NARATOR] SELAMAT MALAM PEMIRSA, INILAH BERITA UTAMA TAPIN TV.
+V: CUE GRAFIS JUDUL${TAB}${TAB}| A: [NARATOR] ${formattedLead}
+
+>> ROLPACKAGE (ROLPKG / VOXPOP)
+V: RPKG CUE ROLL VIDEO${TAB}| A: ${formattedRolpackage || 'TIDAK ADA ROLPACKAGE. NARASI DARI STUDIO.'}
+V: TIME CODE (00:00 - ${duration.padStart(2, '0')}:00) ${TAB}| A: ${formattedRolpackage ? '(Lanjut Narasi di atas SOT/Video)' : ''}
+
+>> CLOSING (PULL OUT)
+V: CUE LEAD GRAFIS${TAB}${TAB}| A: Demikianlah laporan kami mengenai ${formattedTitle}.
+V: GRAFIS NAMA REP. ${TAB}| A: DARI ${formatToScript(closingLocation)} / ${formatToScript(reporter)} DAN TIM LIPUTAN TAPIN TV MENGABARKAN //.
+${LINE}
+            `.trim();
+
+            // 3. Generate Social Media Content (remains the same)
+            const rawLead = leadText.trim().replace(/\.\s*$/, ''); 
+
+            const igCaption = 
+                `${inputTitle.trim().toUpperCase()}! 🥇🥈
+                
+${rawLead}. 
+Jangan lewatkan liputan lengkapnya di Tapin TV! 
+(${closingLocation.trim()} - Laporan oleh ${reporter.trim()})
+`;
+
+            const ytDescription = 
+                `LAPORAN KHUSUS: ${inputTitle.trim().toUpperCase()}
+                
+${rawContent.trim()}
+
+---------------------------------------------------
+Tonton terus update dari PORPROV KALSEL lainnya!
+
+Reporter: ${reporter.trim()}
+Lokasi: ${closingLocation.trim()}`;
+
+            const titleKeywords = inputTitle.split(/\s+/).filter(w => w.length > 3).map(w => w.toLowerCase());
+            const contentKeywords = rawContent.toLowerCase().match(/(gulat|tapin|medali|emas|perak|perunggu|porprov|kalsel|taekwondo|ferdinan|syarif)/g) || [];
+            
+            const uniqueKeywords = [...new Set([...titleKeywords, ...contentKeywords])];
+
+            const baseHashtags = [
+                '#TapinBerprestasi',
+                '#PORPROVKalsel',
+                '#OlahragaIndonesia',
+                '#BeritaOlahraga',
+                '#MangGigitMelaporkan',
+            ];
+
+            const generatedHashtags = uniqueKeywords.map(word => `#${word.charAt(0).toUpperCase() + word.slice(1)}`);
+            const finalHashtags = [...new Set([...baseHashtags, ...generatedHashtags.slice(0, 5)])].join(' ');
+
+
+            // 4. Tampilkan Hasil
+            outputScript.textContent = finalScript;
+            document.getElementById('igCaptionOutput').textContent = igCaption.trim();
+            document.getElementById('ytDescriptionOutput').textContent = ytDescription.trim();
+            document.getElementById('hashtagOutput').textContent = finalHashtags;
+
+            outputContainer.classList.remove('hidden');
+            socialMediaContainer.classList.remove('hidden');
+
+            // Scroll ke hasil
+            outputContainer.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function copyText(elementId) {
+            const scriptText = document.getElementById(elementId).textContent;
+            
+            const textarea = document.createElement('textarea');
+            textarea.value = scriptText;
+            document.body.appendChild(textarea);
+            textarea.select();
+            
+            try {
+                document.execCommand('copy');
+                showNotification("Teks berhasil disalin!");
+            } catch (err) {
+                console.error('Gagal menyalin: ', err);
+                alertUser("Gagal menyalin teks. Silakan salin manual.");
+            }
+            
+            document.body.removeChild(textarea);
+        }
+
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.classList.remove('hidden', 'opacity-0');
+            notification.classList.add('opacity-100');
+            setTimeout(() => {
+                notification.classList.remove('opacity-100');
+                notification.classList.add('opacity-0');
+                setTimeout(() => {
+                    notification.classList.add('hidden');
+                }, 300);
+            }, 2000);
+        }
+
+        function alertUser(message) {
+            const customAlert = document.getElementById('customAlert');
+            const customAlertMessage = document.getElementById('customAlertMessage');
+            customAlertMessage.textContent = message;
+            customAlert.classList.remove('hidden');
+        }
+        
+        // Fungsi Update Waktu Real-Time
+        function updateDateTime() {
+            const dateTimeElement = document.getElementById('currentDateTime');
+            if (dateTimeElement) {
+                dateTimeElement.textContent = getScriptHeaderDateTime();
+            }
+        }
+        
+        // Initialize date/time on load and update every second
+        document.addEventListener('DOMContentLoaded', () => {
+            updateDateTime();
+            setInterval(updateDateTime, 1000);
+        });
+    </script>
+</body>
+</html>
