@@ -6,212 +6,424 @@
     <title>Pembuat Naskah Berita TV</title>
     <!-- Load Tailwind CSS --><script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
+        
+        /* Tema Dasar: Modern, Cerah, dan Enerjik */
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #0F172A; /* Dark Blue - Slate 900 */
-            color: #E2E8F0; /* Light text color */
+            background-color: #E2E8F0; /* Light Gray/Silver Background */
+            color: #1F2937; /* Dark text color */
+            position: relative; /* Added for pseudo-element positioning */
+            overflow-x: hidden; /* Prevents scrollbar from large animated background */
         }
-        /* Custom style to mimic script presentation - NOW TWO-COLUMN FRIENDLY */
-        #outputScript {
-            white-space: pre-wrap;
-            font-size: 0.95rem;
-            line-height: 1.8; /* Slightly wider line height for better column readability */
-            background-color: #1E293B; 
-            color: #F8FAFC; 
-            border-left: 5px solid #FACC15; 
-            border-radius: 0.5rem; 
+        
+        /* --- ANIMASI LATAR BELAKANG --- */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 200%; /* Make it bigger than viewport for movement */
+            height: 200%;
+            /* Gradien biru, ungu, dan biru neon */
+            background: linear-gradient(135deg, #1D4ED8, #3B82F6, #7C3AED, #3B82F6, #1D4ED8);
+            background-size: 400% 400%; /* Allows for smoother shifting */
+            animation: gradient-shift 20s ease infinite; /* Sangat lambat dan halus */
+            z-index: -1; /* Place behind all content */
+            opacity: 0.3; /* Sangat subtil agar tidak mengganggu */
         }
-        /* Style for required input */
-        input:required:invalid, textarea:required:invalid {
-            border-color: #F87171; /* Red for invalid input */
+
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
-        /* Custom gradient button */
-        .btn-gradient {
-            background: linear-gradient(to right, #FACC15, #F59E0B); 
-            color: #1E293B; 
-            font-weight: 600;
-            transition: all 0.2s ease-in-out;
-        }
-        .btn-gradient:hover {
-            background: linear-gradient(to right, #FACC15, #D97706); 
-            box-shadow: 0 4px 10px rgba(252, 186, 21, 0.4); 
-        }
+        /* --- END ANIMASI LATAR BELAKANG --- */
+
+        /* Warna Aksen Keren */
+        .neon-blue { color: #3B82F6; /* Bright Blue */ }
+        .electric-yellow { background-color: #FACC15; /* Bright Yellow */ }
+
+        /* Header (Lebih Berani) */
         .header-bg {
-            background: linear-gradient(to right, #1E3A8A, #172554); 
-            color: #FACC15; 
-        }
-        .card-bg {
-            background-color: #1E293B; 
-            color: #E2E8F0;
-        }
-        .border-highlight {
-            border-color: #FACC15; 
-        }
-        .focus-ring-yellow:focus {
-            outline: none;
-            border-color: #FACC15;
-            box-shadow: 0 0 0 2px rgba(252, 186, 21, 0.5);
+            background: #1F2937; /* Dark background for high contrast */
+            color: #E2E8F0; 
+            border-bottom: 5px solid #3B82F6; /* Neon Blue bottom border */
         }
         .text-highlight {
-            color: #FACC15; 
+            color: #3B82F6; /* Neon Blue for titles */
         }
-        /* Style for caption output */
+
+        /* Card / Kotak Konten */
+        .card-bg {
+            background-color: #FFFFFF; /* White card background */
+            color: #1F2937;
+            border: 1px solid #D1D5DB;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* Modern shadow */
+        }
+
+        /* Input Styles */
+        input:required:invalid, textarea:required:invalid {
+            border-color: #EF4444; /* Bright Red for errors */
+        }
+        .input-style {
+            background-color: #F3F4F6; /* Light input fill */
+            border: 2px solid #D1D5DB;
+            color: #1F2937;
+        }
+        .focus-ring-blue:focus {
+            outline: none;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+        }
+
+        /* Custom Gradient Button (Electric) */
+        .btn-gradient {
+            background: linear-gradient(45deg, #3B82F6, #1D4ED8); /* Blue Gradient */
+            color: #FFFFFF; 
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            transition: all 0.3s ease-in-out;
+            border: none;
+        }
+        .btn-gradient:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.5); 
+        }
+
+        /* Output Script Area (Dark Mode for High Visibility) */
+        #outputScript {
+            white-space: pre-wrap;
+            font-family: 'Inter', monospace; /* Keep it clean */
+            font-size: 0.95rem;
+            line-height: 1.8;
+            background-color: #1F2937; /* Dark Mode background */
+            color: #FACC15; /* Electric Yellow text */
+            border-left: 5px solid #3B82F6; /* Neon Blue accent */
+            border-radius: 0.75rem; 
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        
+        /* Caption Output Area (Subtle Dark Mode) */
         .caption-output {
-            background-color: #0F172A; 
-            border: 1px solid #334155;
-            color: #E2E8F0;
+            background-color: #F3F4F6; /* Light gray background */
+            border: 1px solid #D1D5DB;
+            color: #1F2937;
         }
-        /* Footer style */
+        .caption-output.text-yellow-400 { /* For the hashtag area */
+             color: #3B82F6; /* Change hashtag color to Neon Blue */
+        }
+
+        /* Footer Style */
         .footer-bg {
-            background-color: #1E293B;
-            border-top: 1px solid #334155;
-            color: #94A3B8; 
+            background-color: #FFFFFF;
+            border-top: 1px solid #D1D5DB;
+            color: #6B7280; /* Gray text */
+        }
+        /* TTS Button Style (default/play state) */
+        .tts-button {
+            color: #3B82F6; /* Neon blue icon/text */
+            background-color: #EBF8FF; /* Very light blue background */
+        }
+        .tts-button:hover {
+            background-color: #DBEEFF;
+        }
+        /* TTS Button Style (stop state) */
+        .tts-button.speaking {
+            background-color: #EF4444; /* Red background */
+            color: #FFFFFF; /* White text */
+        }
+        .tts-button.speaking:hover {
+            background-color: #DC2626; /* Darker red on hover */
         }
     </style>
 </head>
 <body class="p-4 md:p-8">
 
     <div class="max-w-4xl mx-auto">
-        <header class="text-center mb-8 p-6 rounded-xl shadow-lg header-bg">
+        <header class="text-center mb-8 p-6 rounded-xl shadow-2xl header-bg">
             <!-- Diperbarui: H1 kini hanya menampilkan branding utama -->
-            <h1 class="text-3xl font-bold text-highlight">TAPIN TV</h1>
+            <h1 class="text-7xl font-black text-white">TAPIN TV <span class="text-5xl text-yellow-500">⚡</span></h1>
             <!-- Diperbarui: P kini menampilkan deskripsi alat yang sebelumnya ada di H1 -->
-            <p class="text-gray-300 mt-2">Pembuat Naskah Berita TV (ROLPACKAGE)</p>
-            <div id="currentDateTime" class="mt-3 text-sm font-medium text-yellow-300"></div>
+            <p class="text-gray-400 font-semibold mt-1">Pembuat Naskah Berita TV (ROLPACKAGE) </p>
+            <div id="currentDateTime" class="mt-3 text-sm font-bold text-yellow-400"></div>
         </header>
 
         <!-- Input Form --><div class="card-bg p-6 md:p-8 rounded-xl shadow-lg mb-8">
-            <h2 class="text-xl font-semibold text-highlight mb-4 border-b border-gray-700 pb-2">1. Input Data Berita & Produksi</h2>
+            <h2 class="text-2xl font-extrabold text-highlight mb-4 border-b border-gray-300 pb-2">1. Input Data Berita & Produksi</h2>
             
             <div class="space-y-4">
                 
                 <!-- NEW PROFESSIONAL FIELDS -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
-                        <label for="scriptNumber" class="block text-sm font-medium text-gray-300">No. Naskah (Opsional)</label>
-                        <input type="text" id="scriptNumber" class="mt-1 block w-full rounded-lg bg-gray-700 border-gray-600 text-white shadow-sm p-3 focus-ring-yellow border-2" placeholder="Contoh: B01 / 2024">
+                        <label for="scriptNumber" class="block text-sm font-semibold text-gray-700">No. Naskah (Opsional)</label>
+                        <input type="text" id="scriptNumber" class="mt-1 block w-full rounded-lg input-style shadow-sm p-3 focus-ring-blue border-2" placeholder="Contoh: B01 / 2024">
                     </div>
                     <div>
-                        <label for="duration" class="block text-sm font-medium text-gray-300">Durasi Tayang (Detik)</label>
-                        <input type="number" id="duration" class="mt-1 block w-full rounded-lg bg-gray-700 border-gray-600 text-white shadow-sm p-3 focus-ring-yellow border-2" placeholder="Contoh: 60" value="60">
+                        <label for="duration" class="block text-sm font-semibold text-gray-700">Durasi Tayang (Detik)</label>
+                        <input type="number" id="duration" class="mt-1 block w-full rounded-lg input-style shadow-sm p-3 focus-ring-blue border-2" placeholder="Contoh: 60" value="60">
                     </div>
                     <div>
-                        <label for="cameraman" class="block text-sm font-medium text-gray-300">Nama Juru Kamera</label>
-                        <input type="text" id="cameraman" class="mt-1 block w-full rounded-lg bg-gray-700 border-gray-600 text-white shadow-sm p-3 focus-ring-yellow border-2" placeholder="Contoh: JONED">
+                        <label for="cameraman" class="block text-sm font-semibold text-gray-700">Nama Juru Kamera</label>
+                        <input type="text" id="cameraman" class="mt-1 block w-full rounded-lg input-style shadow-sm p-3 focus-ring-blue border-2" placeholder="Contoh: JONED">
                     </div>
                 </div>
                 <!-- END NEW FIELDS -->
 
                 <div>
-                    <label for="inputTitle" class="block text-sm font-medium text-gray-300">Judul Berita (Maks 10 Kata)</label>
-                    <input type="text" id="inputTitle" required class="mt-1 block w-full rounded-lg bg-gray-700 border-gray-600 text-white shadow-sm p-3 focus-ring-yellow border-2" placeholder="Contoh: Tim Gulat Tapin Terus Tambahkan Medali">
+                    <label for="inputTitle" class="block text-sm font-semibold text-gray-700">Judul Berita (Maks 10 Kata)</label>
+                    <input type="text" id="inputTitle" required class="mt-1 block w-full rounded-lg input-style shadow-sm p-3 focus-ring-blue border-2" placeholder="Contoh: Tim Gulat Tapin Terus Tambahkan Medali">
                 </div>
 
                 <div>
-                    <label for="rawContent" class="block text-sm font-medium text-gray-300">Isi Utama Berita (Fakta-fakta, kronologi, kutipan, dan detail)</label>
-                    <textarea id="rawContent" required rows="8" class="mt-1 block w-full rounded-lg bg-gray-700 border-gray-600 text-white shadow-sm p-3 focus-ring-yellow border-2" placeholder="Masukkan semua detail fakta di sini. Paragraf pertama akan otomatis diolah menjadi LEAD. Pastikan fakta dipisahkan dengan titik. Contoh: HARI KETIGA TANDING. TIM GULAT TAPIN KEMBALI TOREHKAN PRESTASINYA DI AJANG PEKAN OLAHRAGA PROVINSI KALIMANTAN SELATAN. KALI INI 2 ATLETNYA RAIH 1 MEDALI EMAS DAN 1 PERAK..."></textarea>
+                    <label for="rawContent" class="block text-sm font-semibold text-gray-700">Isi Utama Berita (Fakta-fakta, kronologi, kutipan, dan detail)</label>
+                    <textarea id="rawContent" required rows="8" class="mt-1 block w-full rounded-lg input-style shadow-sm p-3 focus-ring-blue border-2" placeholder="Masukkan semua detail fakta di sini. Paragraf pertama akan otomatis diolah menjadi LEAD. Pastikan fakta dipisahkan dengan titik. Contoh: HARI KETIGA TANDING. TIM GULAT TAPIN KEMBALI TOREHKAN PRESTASINYA DI AJANG PEKAN OLAHRAGA PROVINSI KALIMANTAN SELATAN. KALI INI 2 ATLETNYA RAIH 1 MEDALI EMAS DAN 1 PERAK..."></textarea>
                 </div>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label for="reporter" class="block text-sm font-medium text-gray-300">Nama Reporter</label>
-                        <input type="text" id="reporter" class="mt-1 block w-full rounded-lg bg-gray-700 border-gray-600 text-white shadow-sm p-3 focus-ring-yellow border-2" placeholder="Contoh: MANG GIGIT">
+                        <label for="reporter" class="block text-sm font-semibold text-gray-700">Nama Reporter</label>
+                        <input type="text" id="reporter" class="mt-1 block w-full rounded-lg input-style shadow-sm p-3 focus-ring-blue border-2" placeholder="Contoh: MANG GIGIT">
                     </div>
                     <div>
-                        <label for="closingLocation" class="block text-sm font-medium text-gray-300">Lokasi Peliputan (Closing)</label>
-                        <input type="text" id="closingLocation" class="mt-1 block w-full rounded-lg bg-gray-700 border-gray-600 text-white shadow-sm p-3 focus-ring-yellow border-2" placeholder="Contoh: DARI TANAH LAUT">
+                        <label for="closingLocation" class="block text-sm font-semibold text-gray-700">Lokasi Peliputan (Closing)</label>
+                        <input type="text" id="closingLocation" class="mt-1 block w-full rounded-lg input-style shadow-sm p-3 focus-ring-blue border-2" placeholder="Contoh: DARI TANAH LAUT">
                     </div>
                 </div>
 
-                <button onclick="generateScript()" class="w-full mt-6 py-3 px-4 rounded-lg shadow-md btn-gradient focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-400 transition duration-150 ease-in-out font-semibold">
-                    GENERATE NASKAH TV
+                <button onclick="generateScript()" class="w-full mt-6 py-3 px-4 rounded-xl shadow-lg btn-gradient focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-blue-400 transition duration-150 ease-in-out font-extrabold">
+                    🚀 GENERATE NASKAH TV
                 </button>
             </div>
         </div>
         
         <!-- Output Script Area --><div id="outputContainer" class="hidden card-bg p-6 md:p-8 rounded-xl shadow-lg">
-            <div class="flex justify-between items-center mb-4 border-b border-gray-700 pb-2">
-                <h2 class="text-xl font-semibold text-highlight">2. Naskah Siaran (Output)</h2>
-                <button onclick="copyText('outputScript')" class="flex items-center text-sm text-gray-400 hover:text-yellow-400 transition">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-1">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v2.25H21V7.5h-4.5V4.5H12V7.5h4.5V17.25zM12 4.5V7.5M8.25 12V4.5M3.75 7.5V19.5h10.5M10.5 12V7.5" />
-                    </svg>
-                    Salin Naskah
-                </button>
+            <div class="flex justify-between items-center mb-4 border-b border-gray-300 pb-2">
+                <h2 class="text-2xl font-extrabold text-highlight">2. Naskah Siaran (Output)</h2>
+                <div class="flex space-x-3">
+                    <!-- UPDATED NATIVE TTS BUTTON -->
+                    <button id="ttsButton" onclick="speakScript()" class="flex items-center text-sm transition py-2 px-3 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed tts-button" disabled>
+                        <svg id="ttsIcon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 mr-1">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25V5.25a3 3 0 013-3h3.493c1.77 0 3.328.988 4.148 2.448m-4.228 9.224v4.374c0 2.21 1.808 4.02 4.017 4.02h.352a5.52 5.52 0 005.352-4.02V9.75M10.5 5.25v1.5m-3.75 3h1.5m4.375-3.5a1.25 1.25 0 100-2.5 1.25 1.25 0 000 2.5zM10.5 12.5h-1.5m-1.5-3v1.5m0 4.5h1.5" />
+                        </svg>
+                        <span id="ttsText">Dengarkan Narasi</span>
+                    </button>
+                    <!-- END UPDATED TTS BUTTON -->
+
+                    <button onclick="copyText('outputScript')" class="flex items-center text-sm transition py-2 px-3 rounded-lg hover:bg-gray-100 text-gray-600 hover:text-blue-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 mr-1">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v2.25H21V7.5h-4.5V4.5H12V7.5h4.5V17.25zM12 4.5V7.5M8.25 12V4.5M3.75 7.5V19.5h10.5M10.5 12V7.5" />
+                        </svg>
+                        Salin Naskah
+                    </button>
+                </div>
             </div>
             
             <!-- Output script now uses monospace/pre tag for column alignment -->
-            <pre id="outputScript" class="p-4 rounded-lg text-gray-800 overflow-x-auto"></pre>
+            <pre id="outputScript" class="p-6 rounded-xl text-gray-800 overflow-x-auto"></pre>
+            <!-- Removed <audio> element as native API is used -->
         </div>
 
         <!-- Social Media Output Area -->
         <div id="socialMediaOutputContainer" class="hidden card-bg p-6 md:p-8 rounded-xl shadow-lg mt-8">
-            <h2 class="text-xl font-semibold text-highlight mb-4 border-b border-gray-700 pb-2">3. Caption Media Sosial</h2>
+            <h2 class="text-2xl font-extrabold text-highlight mb-4 border-b border-gray-300 pb-2">3. Caption Media Sosial *FYP Ready*</h2>
             
             <!-- Instagram Caption -->
             <div class="mb-6">
                 <div class="flex justify-between items-center mb-2">
-                    <h3 class="font-semibold text-gray-300">A. Instagram/Post Singkat</h3>
-                    <button onclick="copyText('igCaptionOutput')" class="flex items-center text-sm text-gray-400 hover:text-yellow-400 transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-1">
+                    <h3 class="font-bold text-gray-700">A. Instagram/Post Singkat</h3>
+                    <button onclick="copyText('igCaptionOutput')" class="flex items-center text-sm transition text-gray-600 hover:text-blue-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 mr-1">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v2.25H21V7.5h-4.5V4.5H12V7.5h4.5V17.25zM12 4.5V7.5M8.25 12V4.5M3.75 7.5V19.5h10.5M10.5 12V7.5" />
                         </svg>
                         Salin Teks
                     </button>
                 </div>
-                <pre id="igCaptionOutput" class="p-3 rounded-lg caption-output overflow-x-auto text-sm"></pre>
+                <pre id="igCaptionOutput" class="p-4 rounded-lg caption-output overflow-x-auto text-sm"></pre>
             </div>
 
             <!-- YouTube Caption (Description) -->
             <div>
                 <div class="flex justify-between items-center mb-2">
-                    <h3 class="font-semibold text-gray-300">B. YouTube Description/Long Caption</h3>
-                    <button onclick="copyText('ytDescriptionOutput')" class="flex items-center text-sm text-gray-400 hover:text-yellow-400 transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-1">
+                    <h3 class="font-bold text-gray-700">B. YouTube Description/Long Caption</h3>
+                    <button onclick="copyText('ytDescriptionOutput')" class="flex items-center text-sm transition text-gray-600 hover:text-blue-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 mr-1">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v2.25H21V7.5h-4.5V4.5H12V7.5h4.5V17.25zM12 4.5V7.5M8.25 12V4.5M3.75 7.5V19.5h10.5M10.5 12V7.5" />
                         </svg>
                         Salin Teks
                     </button>
                 </div>
-                <pre id="ytDescriptionOutput" class="p-3 rounded-lg caption-output overflow-x-auto text-sm"></pre>
+                <pre id="ytDescriptionOutput" class="p-4 rounded-lg caption-output overflow-x-auto text-sm"></pre>
             </div>
 
             <!-- Hashtags -->
-            <div class="mt-6 border-t border-gray-700 pt-4">
+            <div class="mt-6 border-t border-gray-300 pt-4">
                 <div class="flex justify-between items-center mb-2">
-                    <h3 class="font-semibold text-highlight">#Hashtags</h3>
-                    <button onclick="copyText('hashtagOutput')" class="flex items-center text-sm text-gray-400 hover:text-yellow-400 transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-1">
+                    <h3 class="font-extrabold text-highlight">#Hashtags</h3>
+                    <button onclick="copyText('hashtagOutput')" class="flex items-center text-sm transition text-gray-600 hover:text-blue-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 mr-1">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v2.25H21V7.5h-4.5V4.5H12V7.5h4.5V17.25zM12 4.5V7.5M8.25 12V4.5M3.75 7.5V19.5h10.5M10.5 12V7.5" />
                         </svg>
                         Salin Hashtag
                     </button>
                 </div>
-                <pre id="hashtagOutput" class="p-3 rounded-lg caption-output overflow-x-auto text-yellow-400 text-sm"></pre>
+                <pre id="hashtagOutput" class="p-4 rounded-lg caption-output overflow-x-auto text-sm caption-output text-yellow-400"></pre>
             </div>
         </div>
 
-        <!-- Notification Bar --><div id="notification" class="hidden fixed bottom-4 right-4 bg-yellow-500 text-blue-900 px-4 py-2 rounded-lg shadow-xl transition-opacity duration-300">
+        <!-- Notification Bar --><div id="notification" class="hidden fixed bottom-4 right-4 bg-blue-500 text-white px-4 py-2 rounded-lg shadow-xl transition-opacity duration-300">
             Naskah berhasil disalin!
         </div>
 
         <!-- Custom Alert Modal --><div id="customAlert" class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 z-50">
-            <div class="bg-gray-800 p-6 rounded-lg shadow-xl max-w-sm w-full border-t-4 border-yellow-500">
-                <h3 class="text-lg font-bold mb-3 text-yellow-500">Perhatian</h3>
-                <p class="text-gray-200 mb-4" id="customAlertMessage"></p>
-                <button onclick="document.getElementById('customAlert').classList.add('hidden')" class="w-full py-2 bg-yellow-500 text-gray-900 font-semibold rounded-lg hover:bg-yellow-600 transition">OK</button>
+            <div class="bg-white p-6 rounded-xl shadow-xl max-w-sm w-full border-t-4 border-blue-500">
+                <h3 class="text-xl font-bold mb-3 text-blue-600">⚠ PENTING</h3>
+                <p class="text-gray-700 mb-4" id="customAlertMessage"></p>
+                <button onclick="document.getElementById('customAlert').classList.add('hidden')" class="w-full py-2 bg-blue-500 text-white font-semibold rounded-xl hover:bg-blue-600 transition">OKE, SIAP!</button>
             </div>
         </div>
 
     </div>
     
     <footer class="mt-12 p-4 text-center footer-bg rounded-t-xl max-w-4xl mx-auto shadow-inner">
-        <p class="text-xs">&copy; 2025 Aplikasi Pembuat Naskah Berita TV- oleh Mang Gigit Sayang Tapin TV.</p>
-        <p class="text-xs mt-1">Dirancang untuk efisiensi produksi berita.</p>
+        <p class="text-xs font-semibold">&copy; 2025 Aplikasi Pembuat Naskah Berita TV, oleh Mang Gigit Sayang Tapin TV.</p>
+        <p class="text-xs mt-1 text-gray-500">Mudah Dan Menyenangkan untuk efisiensi produksi berita. </p>
     </footer>
 
     <script>
+        // --- Utility function for TTS ---
+        function extractNarasi(script) {
+            const lines = script.split('\n');
+            let narration = [];
+            // Regex to find content after '| A: '
+            const narrationStartRegex = /\|\s*A:\s*(.*)/;
+
+            for (const line of lines) {
+                const match = line.match(narrationStartRegex);
+                if (match && match[1]) {
+                    let text = match[1].trim();
+                    
+                    // Remove directional/production notes
+                    text = text.replace(/\[NARATOR\]/g, '').trim();
+                    text = text.replace(/\(Lanjut Narasi di atas SOT\/Video\)/g, '').trim();
+                    text = text.replace('TIDAK ADA ROLPACKAGE. NARASI DARI STUDIO.', '').trim();
+                    
+                    // Convert TV script punctuation to standard speech
+                    text = text.replace(/\/\//g, '. '); // TV break (becomes full stop)
+                    text = text.replace(/\//g, ', '); // TV pause (becomes comma)
+                    text = text.replace(/\.{2,}/g, '.').trim(); // Clean up multiple dots
+
+                    if (text.length > 0) {
+                        narration.push(text);
+                    }
+                }
+            }
+            // Combine into a single, clean narrative
+            return narration.join(' ').replace(/\s\s+/g, ' ').trim();
+        }
+
+        // --- Native Web Speech API Implementation ---
+        
+        // Helper to find an Indonesian voice (or fallback)
+        function findIndonesianVoice() {
+            const voices = window.speechSynthesis.getVoices();
+            // Prefer a voice with 'id-ID' or 'id' language code
+            return voices.find(voice => 
+                voice.lang === 'id-ID' || voice.lang.startsWith('id')
+            ) || voices.find(voice => voice.default); // Fallback to default
+        }
+        
+        // Main TTS function using native browser API
+        async function speakScript() {
+            if (!('speechSynthesis' in window)) {
+                alertUser("Peramban Anda tidak mendukung fitur Text-to-Speech.");
+                return;
+            }
+
+            const ttsButton = document.getElementById('ttsButton');
+            const ttsText = document.getElementById('ttsText');
+            const scriptContent = document.getElementById('outputScript').textContent;
+
+            const textToSpeak = extractNarasi(scriptContent);
+
+            if (!textToSpeak) {
+                alertUser("Teks narasi kosong. Harap isi konten berita dan buat naskah terlebih dahulu.");
+                return;
+            }
+
+            // Check if currently speaking and stop if so
+            if (window.speechSynthesis.speaking) {
+                window.speechSynthesis.cancel();
+                // UI: Reset button state after stopping
+                ttsButton.classList.remove('speaking');
+                ttsText.textContent = 'Dengarkan Narasi';
+                showNotification("Narasi dihentikan.");
+                return;
+            }
+            
+            // UI: Start Speaking State (using a stop button style)
+            ttsButton.classList.add('speaking');
+            ttsText.textContent = 'Berhenti Membaca';
+
+            try {
+                const utterance = new SpeechSynthesisUtterance(textToSpeak);
+                
+                // Ensure voices are loaded before searching
+                if (window.speechSynthesis.getVoices().length === 0) {
+                     await new Promise(resolve => {
+                        window.speechSynthesis.onvoiceschanged = () => {
+                            resolve();
+                        };
+                    });
+                }
+                
+                let voice = findIndonesianVoice();
+
+                if (voice) {
+                    utterance.voice = voice;
+                } else {
+                    console.warn("Indonesian voice not found, using browser default.");
+                }
+                
+                // Set rate and pitch for a clear news anchor sound
+                utterance.rate = 1.0; 
+                utterance.pitch = 1.0; 
+                utterance.lang = 'id-ID'; 
+
+                // Define callback when speech ends
+                utterance.onend = () => {
+                    // UI: Reset button state
+                    ttsButton.classList.remove('speaking');
+                    ttsText.textContent = 'Dengarkan Narasi';
+                    showNotification("Narasi selesai.");
+                };
+                
+                // Define error callback
+                utterance.onerror = (event) => {
+                    console.error('SpeechSynthesis Error:', event.error);
+                    alertUser(`Gagal memutar audio. Pesan Error: ${event.error}.`);
+                    
+                    // UI: Reset button state on error
+                    ttsButton.classList.remove('speaking');
+                    ttsText.textContent = 'Dengarkan Narasi';
+                };
+
+                window.speechSynthesis.speak(utterance);
+                showNotification("Mulai memutar narasi...");
+
+            } catch (error) {
+                console.error('TTS Initialization Error:', error);
+                alertUser(`Terjadi kesalahan saat memulai fitur suara: ${error.message}`);
+                
+                // UI: Reset button state on error
+                ttsButton.classList.remove('speaking');
+                ttsText.textContent = 'Dengarkan Narasi';
+            }
+        }
+        // --- END Native Web Speech API Implementation ---
+
+
         // Global utility function to get the current date/time string for the script header
         function getScriptHeaderDateTime() {
             const now = new Date();
@@ -255,6 +467,7 @@
             const outputScript = document.getElementById('outputScript');
             const outputContainer = document.getElementById('outputContainer');
             const socialMediaContainer = document.getElementById('socialMediaOutputContainer');
+            const ttsButton = document.getElementById('ttsButton');
 
             // Validasi input
             if (!inputTitle || !rawContent) {
@@ -334,7 +547,8 @@ Reporter: ${reporter.trim()}
 Lokasi: ${closingLocation.trim()}`;
 
             const titleKeywords = inputTitle.split(/\s+/).filter(w => w.length > 3).map(w => w.toLowerCase());
-            const contentKeywords = rawContent.toLowerCase().match(/(gulat|tapin|medali|emas|perak|perunggu|porprov|kalsel|taekwondo|ferdinan|syarif)/g) || [];
+            // Added more trendy keywords to the contentKeywords regex for better hashtag generation
+            const contentKeywords = rawContent.toLowerCase().match(/(gulat|tapin|medali|emas|perak|perunggu|porprov|kalsel|taekwondo|ferdinan|syarif|viral|trending|kekinian|info)/g) || [];
             
             const uniqueKeywords = [...new Set([...titleKeywords, ...contentKeywords])];
 
@@ -344,6 +558,8 @@ Lokasi: ${closingLocation.trim()}`;
                 '#OlahragaIndonesia',
                 '#BeritaOlahraga',
                 '#MangGigitMelaporkan',
+                '#FYP',
+                '#Viral',
             ];
 
             const generatedHashtags = uniqueKeywords.map(word => `#${word.charAt(0).toUpperCase() + word.slice(1)}`);
@@ -358,7 +574,8 @@ Lokasi: ${closingLocation.trim()}`;
 
             outputContainer.classList.remove('hidden');
             socialMediaContainer.classList.remove('hidden');
-
+            ttsButton.disabled = false; // Enable TTS button after generation
+            
             // Scroll ke hasil
             outputContainer.scrollIntoView({ behavior: 'smooth' });
         }
@@ -415,8 +632,12 @@ Lokasi: ${closingLocation.trim()}`;
         document.addEventListener('DOMContentLoaded', () => {
             updateDateTime();
             setInterval(updateDateTime, 1000);
+            
+            // Pre-load voices for TTS on load
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.getVoices();
+            }
         });
     </script>
 </body>
 </html>
-
