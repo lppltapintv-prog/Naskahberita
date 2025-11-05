@@ -120,24 +120,21 @@
             border-top: 1px solid #D1D5DB;
             color: #6B7280; /* Gray text */
         }
-        .copy-button {
-            color: #6B7280;
+        /* TTS Button Style (default/play state) */
+        .tts-button {
+            color: #3B82F6; /* Neon blue icon/text */
+            background-color: #EBF8FF; /* Very light blue background */
         }
-        .copy-button:hover {
-            color: #3B82F6;
+        .tts-button:hover {
+            background-color: #DBEEFF;
         }
-
-        /* Loader Spinner */
-        .loader {
-            border-top-color: #3B82F6;
-            border-left-color: #3B82F6;
-            border-right-color: transparent;
-            border-bottom-color: transparent;
-            animation: spin 1s linear infinite;
+        /* TTS Button Style (stop state) */
+        .tts-button.speaking {
+            background-color: #EF4444; /* Red background */
+            color: #FFFFFF; /* White text */
         }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .tts-button.speaking:hover {
+            background-color: #DC2626; /* Darker red on hover */
         }
     </style>
 </head>
@@ -146,7 +143,7 @@
     <div class="max-w-4xl mx-auto">
         <header class="text-center mb-8 p-6 rounded-xl shadow-2xl header-bg">
             <!-- Diperbarui: H1 kini hanya menampilkan branding utama -->
-            <h1 class="text-6xl font-black text-white">TAPIN TV <span class="text-3xl text-yellow-500">⚡</span></h1>
+            <h1 class="text-7xl font-black text-white">TAPIN TV <span class="text-5xl text-yellow-500">⚡</span></h1>
             <!-- Diperbarui: P kini menampilkan deskripsi alat yang sebelumnya ada di H1 -->
             <p class="text-gray-400 font-semibold mt-1">Pembuat Naskah Berita TV (ROLPACKAGE) </p>
             <div id="currentDateTime" class="mt-3 text-sm font-bold text-yellow-400"></div>
@@ -205,17 +202,16 @@
             <div class="flex justify-between items-center mb-4 border-b border-gray-300 pb-2">
                 <h2 class="text-2xl font-extrabold text-highlight">2. Naskah Siaran (Output)</h2>
                 <div class="flex space-x-3">
-                    <!-- NEW TTS BUTTON -->
-                    <button id="ttsButton" onclick="speakScript()" class="flex items-center text-sm copy-button transition py-2 px-3 rounded-lg hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
-                        <div id="ttsSpinner" class="hidden w-4 h-4 border-2 border-dashed rounded-full loader mr-2"></div>
+                    <!-- UPDATED NATIVE TTS BUTTON -->
+                    <button id="ttsButton" onclick="speakScript()" class="flex items-center text-sm transition py-2 px-3 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed tts-button" disabled>
                         <svg id="ttsIcon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 mr-1">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25V5.25a3 3 0 013-3h3.493c1.77 0 3.328.988 4.148 2.448m-4.228 9.224v4.374c0 2.21 1.808 4.02 4.017 4.02h.352a5.52 5.52 0 005.352-4.02V9.75M10.5 5.25v1.5m-3.75 3h1.5m4.375-3.5a1.25 1.25 0 100-2.5 1.25 1.25 0 000 2.5zM10.5 12.5h-1.5m-1.5-3v1.5m0 4.5h1.5" />
                         </svg>
                         <span id="ttsText">Dengarkan Narasi</span>
                     </button>
-                    <!-- END NEW TTS BUTTON -->
+                    <!-- END UPDATED TTS BUTTON -->
 
-                    <button onclick="copyText('outputScript')" class="flex items-center text-sm copy-button transition py-2 px-3 rounded-lg hover:bg-gray-100">
+                    <button onclick="copyText('outputScript')" class="flex items-center text-sm transition py-2 px-3 rounded-lg hover:bg-gray-100 text-gray-600 hover:text-blue-500">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 mr-1">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v2.25H21V7.5h-4.5V4.5H12V7.5h4.5V17.25zM12 4.5V7.5M8.25 12V4.5M3.75 7.5V19.5h10.5M10.5 12V7.5" />
                         </svg>
@@ -226,7 +222,7 @@
             
             <!-- Output script now uses monospace/pre tag for column alignment -->
             <pre id="outputScript" class="p-6 rounded-xl text-gray-800 overflow-x-auto"></pre>
-            <audio id="audioPlayer" controls class="hidden w-full mt-4"></audio>
+            <!-- Removed <audio> element as native API is used -->
         </div>
 
         <!-- Social Media Output Area -->
@@ -237,7 +233,7 @@
             <div class="mb-6">
                 <div class="flex justify-between items-center mb-2">
                     <h3 class="font-bold text-gray-700">A. Instagram/Post Singkat</h3>
-                    <button onclick="copyText('igCaptionOutput')" class="flex items-center text-sm copy-button transition">
+                    <button onclick="copyText('igCaptionOutput')" class="flex items-center text-sm transition text-gray-600 hover:text-blue-500">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 mr-1">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v2.25H21V7.5h-4.5V4.5H12V7.5h4.5V17.25zM12 4.5V7.5M8.25 12V4.5M3.75 7.5V19.5h10.5M10.5 12V7.5" />
                         </svg>
@@ -251,7 +247,7 @@
             <div>
                 <div class="flex justify-between items-center mb-2">
                     <h3 class="font-bold text-gray-700">B. YouTube Description/Long Caption</h3>
-                    <button onclick="copyText('ytDescriptionOutput')" class="flex items-center text-sm copy-button transition">
+                    <button onclick="copyText('ytDescriptionOutput')" class="flex items-center text-sm transition text-gray-600 hover:text-blue-500">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 mr-1">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v2.25H21V7.5h-4.5V4.5H12V7.5h4.5V17.25zM12 4.5V7.5M8.25 12V4.5M3.75 7.5V19.5h10.5M10.5 12V7.5" />
                         </svg>
@@ -265,7 +261,7 @@
             <div class="mt-6 border-t border-gray-300 pt-4">
                 <div class="flex justify-between items-center mb-2">
                     <h3 class="font-extrabold text-highlight">#Hashtags</h3>
-                    <button onclick="copyText('hashtagOutput')" class="flex items-center text-sm copy-button transition">
+                    <button onclick="copyText('hashtagOutput')" class="flex items-center text-sm transition text-gray-600 hover:text-blue-500">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 mr-1">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v2.25H21V7.5h-4.5V4.5H12V7.5h4.5V17.25zM12 4.5V7.5M8.25 12V4.5M3.75 7.5V19.5h10.5M10.5 12V7.5" />
                         </svg>
@@ -292,95 +288,11 @@
     
     <footer class="mt-12 p-4 text-center footer-bg rounded-t-xl max-w-4xl mx-auto shadow-inner">
         <p class="text-xs font-semibold">&copy; 2025 Aplikasi Pembuat Naskah Berita TV, oleh Mang Gigit Sayang Tapin TV.</p>
-        <p class="text-xs mt-1 text-gray-500">Dirancang untuk efisiensi produksi berita. </p>
+        <p class="text-xs mt-1 text-gray-500">Mudah Dan Menyenangkan untuk efisiensi produksi berita. </p>
     </footer>
 
     <script>
-        // API Configuration for TTS
-        const apiKey = "";
-        const ttsApiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`;
-
-        // Utility: Convert base64 string to ArrayBuffer
-        function base64ToArrayBuffer(base64) {
-            const binary_string = window.atob(base64);
-            const len = binary_string.length;
-            const bytes = new Uint8Array(len);
-            for (let i = 0; i < len; i++) {
-                bytes[i] = binary_string.charCodeAt(i);
-            }
-            return bytes.buffer;
-        }
-
-        // Utility: Convert PCM audio data (ArrayBuffer) to WAV Blob
-        function pcmToWav(pcm16, sampleRate) {
-            const numChannels = 1;
-            const bytesPerSample = 2; // 16-bit PCM
-            const blockAlign = numChannels * bytesPerSample;
-            const byteRate = sampleRate * blockAlign;
-            const dataSize = pcm16.length * bytesPerSample;
-
-            const buffer = new ArrayBuffer(44 + dataSize);
-            const view = new DataView(buffer);
-
-            // Write RIFF header
-            function writeString(view, offset, string) {
-                for (let i = 0; i < string.length; i++) {
-                    view.setUint8(offset + i, string.charCodeAt(i));
-                }
-            }
-
-            // RIFF chunk descriptor
-            writeString(view, 0, 'RIFF'); // Chunk ID
-            view.setUint32(4, 36 + dataSize, true); // Chunk Size
-            writeString(view, 8, 'WAVE'); // Format
-
-            // FMT sub-chunk
-            writeString(view, 12, 'fmt '); // Sub-chunk 1 ID
-            view.setUint32(16, 16, true); // Sub-chunk 1 Size (16 for PCM)
-            view.setUint16(20, 1, true); // Audio Format (1 for PCM)
-            view.setUint16(22, numChannels, true); // Num Channels
-            view.setUint32(24, sampleRate, true); // Sample Rate
-            view.setUint32(28, byteRate, true); // Byte Rate
-            view.setUint16(32, blockAlign, true); // Block Align
-            view.setUint16(34, 16, true); // Bits Per Sample (16 bit)
-
-            // Data sub-chunk
-            writeString(view, 36, 'data'); // Sub-chunk 2 ID
-            view.setUint32(40, dataSize, true); // Sub-chunk 2 Size
-
-            // Write the PCM data
-            let offset = 44;
-            for (let i = 0; i < pcm16.length; i++) {
-                view.setInt16(offset, pcm16[i], true);
-                offset += bytesPerSample;
-            }
-
-            return new Blob([view], { type: 'audio/wav' });
-        }
-        
-        // Utility: Fetch with Exponential Backoff
-        async function exponentialBackoffFetch(url, options, maxRetries = 5, delay = 1000) {
-            for (let i = 0; i < maxRetries; i++) {
-                try {
-                    const response = await fetch(url, options);
-                    if (response.ok) {
-                        return response;
-                    }
-                    if (response.status === 429 || response.status >= 500) {
-                        // Retry on rate limit or server error
-                        await new Promise(resolve => setTimeout(resolve, delay * (2 ** i) + Math.random() * 1000));
-                        continue;
-                    }
-                    // For other errors, throw immediately
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                } catch (error) {
-                    if (i === maxRetries - 1) throw error;
-                    await new Promise(resolve => setTimeout(resolve, delay * (2 ** i) + Math.random() * 1000));
-                }
-            }
-        }
-        
-        // Function to extract and clean the narration text for TTS
+        // --- Utility function for TTS ---
         function extractNarasi(script) {
             const lines = script.split('\n');
             let narration = [];
@@ -411,13 +323,26 @@
             return narration.join(' ').replace(/\s\s+/g, ' ').trim();
         }
 
-        // --- TTS Implementation ---
+        // --- Native Web Speech API Implementation ---
+        
+        // Helper to find an Indonesian voice (or fallback)
+        function findIndonesianVoice() {
+            const voices = window.speechSynthesis.getVoices();
+            // Prefer a voice with 'id-ID' or 'id' language code
+            return voices.find(voice => 
+                voice.lang === 'id-ID' || voice.lang.startsWith('id')
+            ) || voices.find(voice => voice.default); // Fallback to default
+        }
+        
+        // Main TTS function using native browser API
         async function speakScript() {
+            if (!('speechSynthesis' in window)) {
+                alertUser("Peramban Anda tidak mendukung fitur Text-to-Speech.");
+                return;
+            }
+
             const ttsButton = document.getElementById('ttsButton');
-            const ttsSpinner = document.getElementById('ttsSpinner');
-            const ttsIcon = document.getElementById('ttsIcon');
             const ttsText = document.getElementById('ttsText');
-            const audioPlayer = document.getElementById('audioPlayer');
             const scriptContent = document.getElementById('outputScript').textContent;
 
             const textToSpeak = extractNarasi(scriptContent);
@@ -427,82 +352,76 @@
                 return;
             }
 
-            // UI: Start Loading State
-            ttsButton.disabled = true;
-            ttsSpinner.classList.remove('hidden');
-            ttsIcon.classList.add('hidden');
-            ttsText.textContent = 'Memproses Audio...';
-            audioPlayer.classList.add('hidden');
-            audioPlayer.src = '';
+            // Check if currently speaking and stop if so
+            if (window.speechSynthesis.speaking) {
+                window.speechSynthesis.cancel();
+                // UI: Reset button state after stopping
+                ttsButton.classList.remove('speaking');
+                ttsText.textContent = 'Dengarkan Narasi';
+                showNotification("Narasi dihentikan.");
+                return;
+            }
+            
+            // UI: Start Speaking State (using a stop button style)
+            ttsButton.classList.add('speaking');
+            ttsText.textContent = 'Berhenti Membaca';
 
             try {
-                // Prepare API Payload (using 'Kore' as a neutral/firm voice, and ID language setting)
-                const payload = {
-                    contents: [{
-                        parts: [{ text: textToSpeak }]
-                    }],
-                    generationConfig: {
-                        responseModalities: ["AUDIO"],
-                        speechConfig: {
-                            voiceConfig: {
-                                prebuiltVoiceConfig: { voiceName: "Kore" } // Using Kore (Firm)
-                            },
-                            languageCode: 'id-ID' // Setting Indonesian language
-                        }
-                    },
-                    model: "gemini-2.5-flash-preview-tts"
+                const utterance = new SpeechSynthesisUtterance(textToSpeak);
+                
+                // Ensure voices are loaded before searching
+                if (window.speechSynthesis.getVoices().length === 0) {
+                     await new Promise(resolve => {
+                        window.speechSynthesis.onvoiceschanged = () => {
+                            resolve();
+                        };
+                    });
+                }
+                
+                let voice = findIndonesianVoice();
+
+                if (voice) {
+                    utterance.voice = voice;
+                } else {
+                    console.warn("Indonesian voice not found, using browser default.");
+                }
+                
+                // Set rate and pitch for a clear news anchor sound
+                utterance.rate = 1.0; 
+                utterance.pitch = 1.0; 
+                utterance.lang = 'id-ID'; 
+
+                // Define callback when speech ends
+                utterance.onend = () => {
+                    // UI: Reset button state
+                    ttsButton.classList.remove('speaking');
+                    ttsText.textContent = 'Dengarkan Narasi';
+                    showNotification("Narasi selesai.");
+                };
+                
+                // Define error callback
+                utterance.onerror = (event) => {
+                    console.error('SpeechSynthesis Error:', event.error);
+                    alertUser(`Gagal memutar audio. Pesan Error: ${event.error}.`);
+                    
+                    // UI: Reset button state on error
+                    ttsButton.classList.remove('speaking');
+                    ttsText.textContent = 'Dengarkan Narasi';
                 };
 
-                const response = await exponentialBackoffFetch(ttsApiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                const result = await response.json();
-                const part = result?.candidates?.[0]?.content?.parts?.[0];
-                const audioData = part?.inlineData?.data;
-                const mimeType = part?.inlineData?.mimeType;
-
-                if (audioData && mimeType && mimeType.startsWith("audio/")) {
-                    // Extract sample rate from mimeType (e.g., audio/L16;rate=24000)
-                    const rateMatch = mimeType.match(/rate=(\d+)/);
-                    if (!rateMatch) throw new Error("Could not determine sample rate from API response.");
-                    const sampleRate = parseInt(rateMatch[1], 10);
-                    
-                    // 1. Convert Base64 (string) to PCM (ArrayBuffer)
-                    const pcmData = base64ToArrayBuffer(audioData);
-                    
-                    // 2. Convert ArrayBuffer to 16-bit signed PCM Array
-                    const pcm16 = new Int16Array(pcmData);
-                    
-                    // 3. Convert PCM array to WAV Blob
-                    const wavBlob = pcmToWav(pcm16, sampleRate);
-                    
-                    // 4. Create URL and load audio player
-                    const audioUrl = URL.createObjectURL(wavBlob);
-                    audioPlayer.src = audioUrl;
-                    audioPlayer.classList.remove('hidden');
-                    audioPlayer.play();
-                    
-                    showNotification("Audio narasi siap diputar!");
-
-                } else {
-                    throw new Error("Respon audio tidak valid atau kosong.");
-                }
+                window.speechSynthesis.speak(utterance);
+                showNotification("Mulai memutar narasi...");
 
             } catch (error) {
-                console.error('TTS Error:', error);
-                alertUser(`Gagal membuat audio. Pesan Error: ${error.message}`);
-            } finally {
-                // UI: End Loading State
-                ttsButton.disabled = false;
-                ttsSpinner.classList.add('hidden');
-                ttsIcon.classList.remove('hidden');
+                console.error('TTS Initialization Error:', error);
+                alertUser(`Terjadi kesalahan saat memulai fitur suara: ${error.message}`);
+                
+                // UI: Reset button state on error
+                ttsButton.classList.remove('speaking');
                 ttsText.textContent = 'Dengarkan Narasi';
             }
         }
-        // --- END TTS Implementation ---
+        // --- END Native Web Speech API Implementation ---
 
 
         // Global utility function to get the current date/time string for the script header
@@ -656,8 +575,7 @@ Lokasi: ${closingLocation.trim()}`;
             outputContainer.classList.remove('hidden');
             socialMediaContainer.classList.remove('hidden');
             ttsButton.disabled = false; // Enable TTS button after generation
-            document.getElementById('audioPlayer').classList.add('hidden'); // Hide audio player initially
-
+            
             // Scroll ke hasil
             outputContainer.scrollIntoView({ behavior: 'smooth' });
         }
@@ -714,7 +632,13 @@ Lokasi: ${closingLocation.trim()}`;
         document.addEventListener('DOMContentLoaded', () => {
             updateDateTime();
             setInterval(updateDateTime, 1000);
+            
+            // Pre-load voices for TTS on load
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.getVoices();
+            }
         });
     </script>
 </body>
 </html>
+
